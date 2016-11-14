@@ -1,0 +1,32 @@
+setwd("/Users/Victor/Documents/open-welfare2/manipulate_welfare")
+library(reshape2)
+
+
+welfare <- read.csv("welfare.csv",header=TRUE)
+welfare2 <- melt(welfare, id=c("area","SERIAL"))
+
+colnames(welfare2) <- c("area", "SERIAL","category", "value")
+welfare2$category <- as.character(welfare2$category)
+
+welfare2[welfare2=="Child.Birth.Benefits..First.Child..NT."]<-"Child Birth Benefits (First Child) (NT$)"
+welfare2[welfare2=="Child.Birth.Benefits..Second.Child..NT."]<-"Child Birth Benefits (Second Child) (NT$)"
+welfare2[welfare2=="Child.Benefits..Caretaker..NT."]<-"Child Benefits (Caretaker) (NT$)"
+welfare2[welfare2=="Household.Income.NT."]<-"Household Income (NT$)"
+welfare2[welfare2=="Birth.Rate.Per.Thousand..Aug.2016."]<-"Birth Rate Per 1,000 People, Aug 2016"
+welfare2[welfare2=="Birth.Rate.Per.Thousand..Sep.2016."]<-"Birth Rate Per 1,000 People, Sep 2016"
+welfare2[welfare2=="Birth.Rate.Per.Thousand..Oct.2016."]<-"Birth Rate Per 1,000 People, Oct 2016"
+welfare2[welfare2=="Population..2015."]<-"Population, 2015"
+welfare2[welfare2=="Population..2015."]<- as.numeric(gsub(",", "", welfare2[welfare2=="Population..2015."]))
+welfare2[welfare2=="Population.Change..2014.to.2015."]<-"Population Change, 2014-2015"
+welfare2[welfare2=="Population..Growth.Rate."]<-"Population Growth Rate, 2014-2015 (%)"
+
+welfare2[welfare2=="Population..Growth.Rate."] <- substr(welfare2[welfare2=="Population..Growth.Rate."],1,nchar(welfare2[welfare2=="Population..Growth.Rate."])-1)
+
+
+
+welfare2$category <- as.factor(welfare2$category)
+
+write.csv(welfare2, "welfare_data.csv")
+
+
+#Child Birth Benefits (First Child)	Child Birth Benefits (Second Child)	Population Change (2014-2015)	#Population (2015)	Population (Growth Rate)	Household Income	Child Benefits (Caretaker)	Birth Rate #(Oct 2016)	Birth Rate (Sep 2016)	Birth Rate (Aug 2016)
